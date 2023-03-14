@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Anup's TO-DO List</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+
+		h1 {
+			text-align: center;
+			margin-top: 20px;
+		}
+
+		#input-form {
+			display: flex;
+			justify-content: center;
+			margin-top: 20px;
+		}
+
+		#input-field {
+			padding: 10px;
+			width: 250px;
+			border: none;
+			border-radius: 5px;
+			margin-right: 10px;
+		}
+
+		#add-button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		ul {
+			list-style-type: none;
+			padding: 0;
+			margin: 20px auto;
+			width: 50%;
+		}
+
+		li {
+			padding: 10px;
+			background-color: #f2f2f2;
+			border-radius: 5px;
+			margin-bottom: 10px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		li span {
+			margin-right: 10px;
+		}
+
+		li button {
+			background-color: #f44336;
+			color: white;
+			border: none;
+			padding: 5px 10px;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+	</style>
+
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #timer {
+            font-size: 48px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #timer-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #start-button,
+        #reset-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #pause-button {
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+	<h1>TO-DO List</h1>
+	<div id="input-form">
+		<input type="text" id="input-field" placeholder="Enter task">
+		<button id="add-button">Add</button>
+	</div>
+	<ul id="task-list"></ul>
+    <script>
+
+//  const categories = ['Best Interviewer Award', 'Failure award', 'Best Rookie Award', 'Best process Award', 'Pick of the Bunch Award', 'TAM of the quarter Award', 'TAM Speaker award','TAM of the month Award','Best Friend Award','Pat on the Back'];
+//  categories.sort();
+//  console.log(categories);
+
+    </script>
+	<script>
+		const taskList = document.getElementById("task-list");
+		const inputField = document.getElementById("input-field");
+		const addButton = document.getElementById("add-button");
+
+		// Retrieve tasks from localStorage
+		const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+		// Display tasks
+		tasks.forEach(function(task) {
+			const li = document.createElement("li");
+			const span = document.createElement("span");
+			const button = document.createElement("button");
+			span.textContent = task;
+			button.textContent = "Delete";
+			li.appendChild(span);
+			li.appendChild(button);
+			taskList.appendChild(li);
+			button.addEventListener("click", function() {
+				li.remove();
+				// Remove task from localStorage
+				const index = tasks.indexOf(task);
+				if (index > -1) {
+					tasks.splice(index, 1);
+					localStorage.setItem("tasks", JSON.stringify(tasks));
+				}
+			});
+		});
+
+		addButton.addEventListener("click", function() {
+			const task = inputField.value;
+			if (task) {
+				const li = document.createElement("li");
+				const span = document.createElement("span");
+				const button = document.createElement("button");
+				span.textContent = task;
+				button.textContent = "Delete";
+				li.appendChild(span);
+				li.appendChild(button);
+				taskList.appendChild(li);
+				inputField.value = "";
+				// Add task to localStorage
+				tasks.push(task);
+			
+				localStorage.setItem("tasks", JSON.stringify(tasks));
+				button.addEventListener("click", function() {
+					li.remove();
+					// Remove task from localStorage
+					const index = tasks.indexOf(task);
+					if (index > -1) {
+						tasks.splice(index, 1);
+						localStorage.setItem("tasks", JSON.stringify(tasks));
+					}
+				});
+			}
+		});
+
+		inputField.addEventListener("keyup", function(event) {
+			if (event.keyCode === 13) {
+				addButton.click();
+			}
+		});
+	</script>
+
+</body>
+</html>

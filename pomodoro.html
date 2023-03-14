@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pomodoro Timer</title>
+  <style>
+    /* add your CSS styles here */
+    .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.timer {
+  font-size: 96px;
+  margin-top: 50px;
+}
+
+.buttons {
+  margin-top: 50px;
+}
+
+button {
+  font-size: 24px;
+  margin: 0 10px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background-color: #3CB371;
+  color: white;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #A9A9A9;
+  cursor: default;
+}
+
+  </style>
+ 
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Pomodoro Timer</h1>
+    <div class="timer">
+      <span id="minutes">2</span>:<span id="seconds">00</span>
+    </div>
+    <div class="buttons">
+      <button id="start">Start</button>
+      <button id="stop" disabled>Stop</button>
+      <button id="tickButton">Play Tick Sound</button>
+    </div>
+  </div>
+
+  <script>
+
+
+const POMODORO_LENGTH = 2; // in minutes
+const SHORT_BREAK_LENGTH = 5; // in minutes
+const LONG_BREAK_LENGTH = 15; // in minutes
+
+let timeLeft = POMODORO_LENGTH * 60; // convert to seconds
+let timerInterval = null;
+let isPomodoro = true;
+let pomodoroCount = 0;
+
+const minutesDisplay = document.querySelector('#minutes');
+const secondsDisplay = document.querySelector('#seconds');
+const startButton = document.querySelector('#start');
+const stopButton = document.querySelector('#stop');
+
+const tickSound = new Audio('tick.mp3');
+const tickButton = document.querySelector('#tickButton');
+tickButton.addEventListener('click', function() {
+  tickSound.play();
+});
+
+function updateTimer() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  minutesDisplay.textContent = minutes.toString().padStart(2, '0');
+  secondsDisplay.textContent = seconds.toString().padStart(2, '0');
+  timeLeft--;
+  if (timeLeft < 0) {
+    clearInterval(timerInterval);
+    if (isPomodoro) {
+      pomodoroCount++;
+      if (pomodoroCount % 4 === 0) {
+        timeLeft = LONG_BREAK_LENGTH * 60;
+        isPomodoro = false;
+        document.body.style.backgroundColor = '#FF6347'; // set background color to red for long break
+      } else {
+        timeLeft = SHORT_BREAK_LENGTH * 60;
+        isPomodoro = false;
+        document.body.style.backgroundColor = '#87CEEB'; // set background color to light blue for short break
+      }
+    } else {
+      timeLeft = POMODORO_LENGTH * 60;
+      isPomodoro = true;
+      document.body.style.backgroundColor = '#3CB371'; // set background color to green for Pomodoro
+    }
+    minutesDisplay.textContent = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    secondsDisplay.textContent = (timeLeft % 60).toString().padStart(2, '0');
+    startButton.disabled = false;
+    stopButton.disabled = true;
+  }
+}
+
+startButton.addEventListener('click', function() {
+  timerInterval = setInterval(updateTimer, 1000);
+  startButton.disabled = true;
+  stopButton.disabled = false;
+});
+
+stopButton.addEventListener('click', function() {
+  clearInterval(timerInterval);
+  startButton.disabled = false;
+  stopButton.disabled = true;
+});
+
+minutesDisplay.textContent = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+secondsDisplay.textContent = (timeLeft % 60).toString().padStart(2, '0');
+  </script>
+
+
+</body>
+</html>
+
+
